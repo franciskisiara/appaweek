@@ -2,15 +2,13 @@
 
 namespace App\Http\Requests;
 
-use App\Concerns\PasswordValidationRules;
-use App\Concerns\ProfileValidationRules;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
+use Illuminate\Validation\Rules\Password;
 
 class RegisterRequest extends FormRequest
 {
-    use PasswordValidationRules, ProfileValidationRules;
-
     /**
      * Determine if the user is authorized to make this request.
      */
@@ -27,8 +25,31 @@ class RegisterRequest extends FormRequest
     public function rules(): array
     {
         return [
-            ...$this->profileRules(),
-            'password' => $this->passwordRules(),
+            'name' => [
+                'required',
+                'string',
+                'max:255'
+            ],
+
+            'email' => [
+                'required',
+                'string',
+                'email',
+                'max:255',
+                Rule::unique('users'),
+            ],
+
+            'password' => [
+                'required',
+                'string',
+                'confirmed',
+                Password::min(8)
+                    ->letters()
+                    ->numbers()
+                    ->symbols()
+                    ->mixedCase()
+                    ->uncompromised(),
+            ],
         ];
     }
 }

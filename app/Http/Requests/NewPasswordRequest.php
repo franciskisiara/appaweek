@@ -2,14 +2,12 @@
 
 namespace App\Http\Requests;
 
-use App\Concerns\PasswordValidationRules;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class NewPasswordRequest extends FormRequest
 {
-    use PasswordValidationRules;
-
     /**
      * Determine if the user is authorized to make this request.
      */
@@ -26,9 +24,20 @@ class NewPasswordRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'token' => 'required',
-            'email' => 'required|email',
-            'password' => $this->passwordRules(),
+            'token' => [
+                'required'
+            ],
+
+            'email' => [
+                'required',
+                'email',
+                Rule::exists('users'),
+            ],
+
+            'password' => [
+                'required',
+                'string'
+            ],
         ];
     }
 }

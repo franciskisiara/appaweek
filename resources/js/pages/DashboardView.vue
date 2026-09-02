@@ -9,13 +9,10 @@ const page = usePage<AppPageProps>()
 <template>
     <BasePage
         title="Dashboard"
-        heading="Dashboard"
+        :heading="`Welcome, ${page.props.auth.user.name}`"
         :breadcrumbs="[]"
     >
         <template #content>
-            <h2 class="no-margin text-h5 text-weight-medium">
-                Welcome, {{ page.props.auth.user.name }}
-            </h2>
         </template>
     </BasePage>
 </template>
